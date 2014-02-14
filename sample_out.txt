@@ -1,0 +1,60 @@
+SpotPriceHistory(c3.xlarge):0.300000(in us-west-2a) too expensive as of 2014-02-14T17:14:37.000Z
+SpotPriceHistory(c3.xlarge):1.200000(in us-west-2c) too expensive as of 2014-02-14T16:05:56.000Z
+[u'us-west-2a', u'us-west-2c']
+SpotPriceHistory(c3.xlarge):0.300000(in us-west-2a) too expensive as of 2014-02-14T17:14:37.000Z
+SpotPriceHistory(c3.xlarge):0.271800(in us-east-1c) too expensive as of 2014-02-14T17:13:24.000Z
+SpotPriceHistory(c3.xlarge):1.200000(in us-west-2c) too expensive as of 2014-02-14T16:05:56.000Z
+[u'us-west-2a', u'us-east-1c', u'us-west-2c']
+this never happens because boto sorts these
+SpotPriceHistory(c3.xlarge):0.300000(in us-west-2a) too expensive as of 2014-02-14T17:14:37.000Z
+SpotPriceHistory(c3.xlarge):0.271800(in us-east-1c) too expensive as of 2014-02-14T17:13:24.000Z
+SpotPriceHistory(c3.xlarge):1.200000(in us-west-2c) too expensive as of 2014-02-14T16:05:56.000Z
+SpotPriceHistory(c3.xlarge):0.342100(in us-west-1a) too expensive as of 2014-02-14T18:12:28.000Z
+SpotPriceHistory(c3.xlarge):2.000000(in us-west-1b) too expensive as of 2014-02-14T05:48:59.000Z
+[u'us-west-2a', u'us-east-1c', u'us-west-2c', u'us-west-1a', u'us-west-1b']
+[u'us-west-2a', u'us-west-2c', u'us-west-2b']
+[u'us-east-1c', u'us-east-1a', u'us-east-1d', u'us-west-2a', u'us-west-2c', u'us-west-2b']
+[u'us-east-1c', u'us-east-1a', u'us-east-1d', u'us-west-2a', u'us-west-2c', u'us-west-2b', u'us-west-1a', u'us-west-1b']
+[u'us-west-2a', u'us-west-2c', u'us-west-2b']
+[u'us-west-2a', u'us-west-2c', u'us-west-2b', u'us-east-1a']
+SpotPriceHistory(m3.large):0.348000(in us-west-1a) too expensive as of 2014-02-14T18:30:01.000Z
+[u'us-east-1a', u'us-west-2a', u'us-west-2c', u'us-west-2b', u'us-west-1a', u'us-west-1b']
+SpotPriceHistory(c3.2xlarge):0.600000(in us-west-2a) too expensive as of 2014-02-14T17:44:00.000Z
+[u'us-west-2a']
+SpotPriceHistory(c3.2xlarge):0.600000(in us-west-2a) too expensive as of 2014-02-14T17:44:00.000Z
+SpotPriceHistory(c3.2xlarge):0.543500(in us-east-1c) too expensive as of 2014-02-14T17:31:22.000Z
+[u'us-west-2a', u'us-east-1c']
+SpotPriceHistory(c3.2xlarge):0.600000(in us-west-2a) too expensive as of 2014-02-14T17:44:00.000Z
+SpotPriceHistory(c3.2xlarge):0.543500(in us-east-1c) too expensive as of 2014-02-14T17:31:22.000Z
+SpotPriceHistory(c3.2xlarge):0.999900(in us-west-1a) too expensive as of 2014-02-14T16:43:08.000Z
+SpotPriceHistory(c3.2xlarge):2.000000(in us-west-1b) too expensive as of 2014-02-14T06:01:09.000Z
+[u'us-west-2a', u'us-east-1c', u'us-west-1a', u'us-west-1b']
+m3.xlarge(us-east-1d) 0.0592(0.0538182) < 0.25
+m3.xlarge(us-east-1d) 0.0592(0.0538182) < 0.25
+m3.large(us-east-1a) 0.043(0.0716667) < 0.15
+m3.large(us-east-1a) 0.043(0.0716667) < 0.15
+m3.large(us-west-2c) 0.0481(0.0801667) < 0.15
+m3.large(us-west-2c) 0.0481(0.0801667) < 0.15
+m3.large(us-west-2c) 0.0481(0.0801667) < 0.15
+m3.xlarge(us-west-2b) 0.1014(0.0921818) < 0.25
+m3.xlarge(us-west-2b) 0.1014(0.0921818) < 0.25
+m3.xlarge(us-west-2b) 0.1014(0.0921818) < 0.25
+m3.xlarge(us-west-1b) 0.1023(0.093) < 0.25
+m3.xlarge(us-west-2c) 0.1093(0.0993636) < 0.25
+m3.xlarge(us-west-2c) 0.1093(0.0993636) < 0.25
+m3.xlarge(us-west-2c) 0.1093(0.0993636) < 0.25
+m3.large(us-west-1b) 0.0716(0.119333) < 0.15
+m3.xlarge(us-west-1a) 0.1333(0.121182) < 0.25
+m3.xlarge(us-west-2a) 0.1424(0.129455) < 0.25
+m3.xlarge(us-west-2a) 0.1424(0.129455) < 0.25
+m3.xlarge(us-west-2a) 0.1424(0.129455) < 0.25
+m3.xlarge(us-east-1c) 0.1746(0.158727) < 0.25
+m3.xlarge(us-east-1c) 0.1746(0.158727) < 0.25
+m3.xlarge(us-east-1a) 0.2435(0.221364) < 0.25
+m3.xlarge(us-east-1a) 0.2435(0.221364) < 0.25
+m3.large(us-west-2a) 0.1449(0.2415) < 0.15
+m3.large(us-west-2a) 0.1449(0.2415) < 0.15
+m3.large(us-west-2a) 0.1449(0.2415) < 0.15
+m3.large(us-west-2b) 0.1453(0.242167) < 0.15
+m3.large(us-west-2b) 0.1453(0.242167) < 0.15
+m3.large(us-west-2b) 0.1453(0.242167) < 0.15
