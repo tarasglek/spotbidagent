@@ -1,5 +1,4 @@
 import boto.ec2
-import pickle
 import logging
 
 log = logging.getLogger(__name__)
@@ -26,23 +25,6 @@ def get_current_spot_prices(region):
         if not current_prices[instance_type].get(az):
             current_prices[instance_type][az] = price.price
     return current_prices
-
-
-def download_pricelist(region):
-    with open("price.%s.pickle" % (region), "w") as out:
-        history = get_spot_price_history(region)
-        pickle.dump(history, out)
-    return history
-
-
-def download():
-    map(download_pricelist, ['eu-west-1', 'us-west-2', 'us-east-1',
-                             'us-west-1'])
-
-
-def get_pricelist_disk(region):
-    history = pickle.load(open("price.%s.pickle" % (region)))
-    return history
 
 
 class Spot:
