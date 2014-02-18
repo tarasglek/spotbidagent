@@ -46,7 +46,6 @@ def decide(rules, regions):
                 return -1
         return sorted(ls, cmp)
     choices = []
-    regions = map(get_pricelist_disk, regions)
     regions = map(sort_newest2oldest, regions)
     for r in rules:
         if type(r[2]) == str:
@@ -72,7 +71,26 @@ def decide(rules, regions):
                 pass
     return sorted(choices)
 
-if __name__ == "__main__":
-    ret = decide([["c3.xlarge", 0.250, 1], ["m3.xlarge", 0.250, 1.1], ["m3.large", 0.150, 0.6], ["c3.2xlarge", 0.250, 1.2], ["c3.xlarge", 0.300, "ondemand"]], ['us-west-2','us-east-1', 'us-west-1', 'eu-west-1'])
+def main():
+    regions = ['us-west-2','us-east-1', 'us-west-1', 'eu-west-1']
+    if len(sys.argv) > 1:
+        print "Using cached data"
+        regions = map(get_pricelist_disk, regions)
+    else:
+        print "Querying AWS"
+        regions = map(download_pricelist, regions)
+        
+    ret = decide([
+        ["m3.large", 0.150, 0.4],
+        ["m2.2xlarge", 0.250, 0.9],
+        ["c3.xlarge", 0.250, 1],
+        ["m3.xlarge", 0.250, 1.1],
+        ["c1.xlarge", 0.250, 1.2],
+        ["c3.2xlarge", 0.250, 1.3],
+        ["g2.2xlarge ", 0.250, 1.3],
+        ["c3.xlarge", 0.300, "ondemand"]
+    ], regions)
     print "\n".join(map(str, ret))
     
+if __name__ == "__main__":
+    main()
