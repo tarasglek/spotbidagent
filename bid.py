@@ -50,13 +50,15 @@ def decide(connections, rules):
     for connection in connections:
         prices.update(get_current_spot_prices(connection))
     for rule in rules:
-        instance_type, bid_price, perf_const = rule
+        instance_type = rule["instance_type"]
+        bid_price = rule["bid_price"]
+        performance_constant = rule["performance_constant"]
         for az, price in prices.get(instance_type, {}).iteritems():
             if price > bid_price:
                 log.debug("%s (in %s) too expensive", price, az)
             else:
                 choices.append(Spot(instance_type, az, price,
-                                    bid_price, perf_const))
+                                    bid_price, performance_constant))
     # sort by self.value()
     choices.sort()
     return choices
@@ -66,10 +68,22 @@ if __name__ == "__main__":
     for region in ['us-west-2', 'us-east-1']:
         # FIXME: user secrets
         connections.append(connect_to_region(region))
-    ret = decide(
-        connections,
-        [["c3.xlarge", 0.250, 1],
-         ["m3.xlarge", 0.250, 1.1],
-         ["c3.2xlarge", 0.250, 1.2]]
-    )
+    rules = [
+        {
+            "instance_type": "c3.xlarge",
+            "performance_constant": 1,
+            "bid_price": 0.25
+        },
+        {
+            "instance_type": "m3.xlarge",
+            "performance_constant": 1.1,
+            "bid_price": 0.25
+        },
+        {
+            "instance_type": "c3.2xlarge",
+            "performance_constant": 1.2,
+            "bid_price": 0.25
+        },
+    ]
+    ret = decide(connections, rules)
     print "\n".join(map(str, ret))
