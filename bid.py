@@ -40,8 +40,8 @@ class Spot:
     def value(self):
         return self.current_price / self.performance_constant
 
-    def __lt__(self, other):
-        return self.value() < other.value()
+    def __cmp__(self, other):
+        return cmp(self.value(), other.value())
 
 
 def decide(connections, rules):
@@ -57,6 +57,7 @@ def decide(connections, rules):
             else:
                 choices.append(Spot(instance_type, az, price,
                                     bid_price, perf_const))
+    # sort by self.value()
     choices.sort()
     return choices
 
