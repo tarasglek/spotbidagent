@@ -60,7 +60,8 @@ def decide(connections, rules):
         for region, region_prices in prices.iteritems():
             for az, price in region_prices.get(instance_type, {}).iteritems():
                 if price > bid_price:
-                    log.debug("%s (in %s) too expensive", price, az)
+                    log.debug("%s (in %s) too expensive for %s", price, az,
+                              instance_type)
                 else:
                     choices.append(
                         Spot(instance_type=instance_type, region=region,
@@ -72,6 +73,8 @@ def decide(connections, rules):
     return choices
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG, format="%(message)s")
+    logging.getLogger("boto").setLevel(logging.INFO)
     connections = []
     for region in ['us-west-2', 'us-east-1']:
         # FIXME: user secrets
