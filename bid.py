@@ -7,7 +7,7 @@ def download_pricelist(region):
     with open("price.%s.pickle" % (region), "w") as out:
         r = boto.ec2.get_region(region)
         ec2 = r.connect()
-        history = ec2.get_spot_price_history();
+        history = ec2.get_spot_price_history(product_description="Linux/UNIX");
         pickle.dump(history, out);
     return history
 
