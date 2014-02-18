@@ -72,7 +72,16 @@ def decide(rules, regions):
     return sorted(choices)
 
 def main():
-    regions = ['us-west-2','us-east-1', 'us-west-1', 'eu-west-1']
+    regions = ['us-west-2',
+               'us-east-1',
+               'us-west-1',
+               'eu-west-1',
+               'ap-southeast-1',
+               'ap-southeast-2',
+               'ap-northeast-1',
+               'sa-east-1'
+    ]
+
     if len(sys.argv) > 1:
         print "Using cached data"
         regions = map(get_pricelist_disk, regions)
@@ -82,12 +91,15 @@ def main():
         
     ret = decide([
         ["m3.large", 0.150, 0.4],
+        ["m1.xlarge", 0.150, 0.5],
         ["m2.2xlarge", 0.250, 0.9],
         ["c3.xlarge", 0.250, 1],
         ["m3.xlarge", 0.250, 1.1],
         ["c1.xlarge", 0.250, 1.2],
         ["c3.2xlarge", 0.250, 1.3],
-        ["g2.2xlarge ", 0.250, 1.3],
+        ["g2.2xlarge", 0.250, 1.3],
+        ["m3.2xlarge", 0.250, 1.3],
+        ["c3.2xlarge", 0.250, 1.3],
         ["c3.xlarge", 0.300, "ondemand"]
     ], regions)
     print "\n".join(map(str, ret))
