@@ -5,7 +5,9 @@ log = logging.getLogger(__name__)
 
 
 def get_current_spot_prices(connection):
-    all_prices = connection.get_spot_price_history()
+    # TODO: pass product_description
+    all_prices = connection.get_spot_price_history(
+        product_description="Linux/UNIX (Amazon VPC)")
     # make sure to sort them by the timestamp, so we don't process the same
     # entry twice
     all_prices = sorted(all_prices, key=lambda x: x.timestamp, reverse=True)
