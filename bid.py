@@ -1,18 +1,11 @@
-import boto.ec2
+from boto.ec2 import connect_to_region
 import logging
 
 log = logging.getLogger(__name__)
 
 
-def get_spot_price_history(region):
-        r = boto.ec2.get_region(region)
-        # TODO: use secrets
-        ec2 = r.connect()
-        return ec2.get_spot_price_history()
-
-
-def get_current_spot_prices(region):
-    all_prices = get_spot_price_history(region)
+def get_current_spot_prices(connection):
+    all_prices = connection.get_spot_price_history()
     # make sure to sort them by the timestamp, so we don't process the same
     # entry twice
     all_prices = sorted(all_prices, key=lambda x: x.timestamp, reverse=True)
@@ -51,11 +44,11 @@ class Spot:
         return self.value() < other.value()
 
 
-def decide(rules, regions):
+def decide(connections, rules):
     choices = []
     prices = {}
-    for region in regions:
-        prices.update(get_current_spot_prices(region))
+    for connection in connections:
+        prices.update(get_current_spot_prices(connection))
     for rule in rules:
         instance_type, bid_price, perf_const = rule
         for az, price in prices.get(instance_type, {}).iteritems():
@@ -68,9 +61,14 @@ def decide(rules, regions):
     return choices
 
 if __name__ == "__main__":
+    connections = []
+    for region in ['us-west-2', 'us-east-1']:
+        # FIXME: user secrets
+        connections.append(connect_to_region(region))
     ret = decide(
+        connections,
         [["c3.xlarge", 0.250, 1],
          ["m3.xlarge", 0.250, 1.1],
-         ["c3.2xlarge", 0.250, 1.2]],
-        ['us-west-2', 'us-east-1'])
+         ["c3.2xlarge", 0.250, 1.2]]
+    )
     print "\n".join(map(str, ret))
