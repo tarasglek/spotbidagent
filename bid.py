@@ -30,7 +30,7 @@ class Spot:
         self.performance_constant = performance_constant
 
     def __repr__(self):
-        return "<%s (%s) %g (value: %g) < %g" % (
+        return "%s (%s) %g (value: %g) < %g" % (
             self.instance_type, self.availability_zone,
             self.current_price, self.value(), self.bid_price)
 
