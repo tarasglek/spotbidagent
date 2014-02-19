@@ -1,33 +1,6 @@
-Querying AWS
-No spot info for g2.2xlarge 
-No spot info for g2.2xlarge 
-No spot info for g2.2xlarge 
-No spot info for g2.2xlarge 
-m2.2xlarge(us-east-1c) 0.0719(0.0798889) < 0.25
-m3.xlarge(us-east-1c) 0.0959(0.0871818) < 0.25
-m3.xlarge(us-west-2c) 0.0976(0.0887273) < 0.25
-m3.xlarge(us-east-1d) 0.1(0.0909091) < 0.25
-c1.xlarge(us-west-1a) 0.1102(0.0918333) < 0.25
-c1.xlarge(us-west-1b) 0.1183(0.0985833) < 0.25
-c1.xlarge(us-west-2c) 0.123(0.1025) < 0.25
-m3.xlarge(us-east-1a) 0.1176(0.106909) < 0.25
-m3.large(us-east-1c) 0.043(0.1075) < 0.15
-m3.large(us-east-1d) 0.043(0.1075) < 0.15
-m3.large(us-west-2b) 0.0449(0.11225) < 0.15
-m3.large(us-west-2c) 0.0486(0.1215) < 0.15
-m2.2xlarge(us-west-2a) 0.1164(0.129333) < 0.25
-m3.xlarge(eu-west-1c) 0.1425(0.129545) < 0.25
-m2.2xlarge(us-west-2c) 0.1168(0.129778) < 0.25
-m3.xlarge(eu-west-1b) 0.1438(0.130727) < 0.25
-m3.xlarge(eu-west-1a) 0.1438(0.130727) < 0.25
-m2.2xlarge(us-west-2b) 0.124(0.137778) < 0.25
-c1.xlarge(eu-west-1b) 0.1762(0.146833) < 0.25
-m3.xlarge(us-west-1a) 0.1711(0.155545) < 0.25
-m3.xlarge(us-west-1b) 0.1711(0.155545) < 0.25
-c1.xlarge(eu-west-1c) 0.19(0.158333) < 0.25
-c1.xlarge(us-east-1c) 0.2(0.166667) < 0.25
-m3.large(eu-west-1a) 0.0679(0.16975) < 0.15
-m2.2xlarge(us-west-1a) 0.18(0.2) < 0.25
-c3.xlarge(us-west-1b) 0.2096(0.2096) < 0.25
-m2.2xlarge(eu-west-1c) 0.2209(0.245444) < 0.25
-m3.large(us-east-1a) 0.1171(0.29275) < 0.15
+m3.xlarge (us-west-2, us-west-2a) 0.25 (value: 0.227273) < 0.25
+m3.xlarge (us-west-2, us-west-2c) 0.25 (value: 0.227273) < 0.25
+m3.xlarge (us-west-2, us-west-2b) 0.25 (value: 0.227273) < 0.25
+m3.xlarge (us-east-1, us-east-1c) 0.25 (value: 0.227273) < 0.25
+m3.xlarge (us-east-1, us-east-1a) 0.25 (value: 0.227273) < 0.25
+m3.xlarge (us-east-1, us-east-1d) 0.25 (value: 0.227273) < 0.25

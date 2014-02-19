@@ -1,108 +1,100 @@
-import boto.ec2
-import simplejson as json
-import sys
-import pickle
+from boto.ec2 import connect_to_region
+import logging
 
-def download_pricelist(region):
-    with open("price.%s.pickle" % (region), "w") as out:
-        r = boto.ec2.get_region(region)
-        ec2 = r.connect()
-        history = ec2.get_spot_price_history(product_description="Linux/UNIX");
-        pickle.dump(history, out);
-    return history
+log = logging.getLogger(__name__)
 
-def download():
-    map(download_pricelist, ['eu-west-1', 'us-west-2','us-east-1', 'us-west-1'])
 
-def get_pricelist_disk(region):
-    history = pickle.load(open("price.%s.pickle" % (region)))
-    return history
+def get_current_spot_prices(connection):
+    # TODO: pass product_description
+    all_prices = connection.get_spot_price_history(
+        product_description="Linux/UNIX (Amazon VPC)")
+    # make sure to sort them by the timestamp, so we don't process the same
+    # entry twice
+    all_prices = sorted(all_prices, key=lambda x: x.timestamp, reverse=True)
+    region = connection.region.name
+    current_prices = {}
+    for price in all_prices:
+        az = price.availability_zone
+        instance_type = price.instance_type
+        if not current_prices.get(instance_type):
+            current_prices[instance_type] = {}
+        if not current_prices[instance_type].get(az):
+            current_prices[instance_type][az] = price.price
+    return {region: current_prices}
+
 
 class Spot:
-    def __init__(self, spotEntry, max_price, performance_constant):
-        self.spotEntry = spotEntry
-        self.max_price = max_price
+    def __init__(self, instance_type, region, availability_zone, current_price,
+                 bid_price, performance_constant):
+        self.instance_type = instance_type
+        self.region = region
+        self.availability_zone = availability_zone
+        self.current_price = current_price
+        self.bid_price = bid_price
         self.performance_constant = performance_constant
+
     def __repr__(self):
-        return "%s(%s) %g(%g) < %g" % (self.spotEntry.instance_type, self.spotEntry.availability_zone,
-                                   self.spotEntry.price, self.value(), self.max_price)
+        return "%s (%s, %s) %g (value: %g) < %g" % (
+            self.instance_type, self.region, self.availability_zone,
+            self.current_price, self.value(), self.bid_price)
+
     def __str__(self):
         return self.__repr__()
 
     def value(self):
-        return self.spotEntry.price / self.performance_constant
+        return self.current_price / self.performance_constant
 
-    def __lt__(self, other):
-        return self.value() < other.value()
+    def __cmp__(self, other):
+        return cmp(self.value(), other.value())
 
-def decide(rules, regions):
-    def sort_newest2oldest(ls):
-        def cmp(a, b):
-            if b.timestamp == a.timestamp:
-                return 0
-            elif b.timestamp > a.timestamp:
-                return 1
-            else:
-                return -1
-        return sorted(ls, cmp)
+
+def decide(connections, rules):
     choices = []
-    regions = map(sort_newest2oldest, regions)
-    for r in rules:
-        if type(r[2]) == str:
-            continue
-        spot_azs = {}
-        for history in regions:
-            for h in history:
-                if h.instance_type != r[0]:
-                    continue
-                if not h.availability_zone in spot_azs:
-                    spot_azs[h.availability_zone] = h
-           
-            if len(spot_azs) == 0:
-                print "No spot info for %s" % r[0]
-                continue
+    prices = {}
+    for connection in connections:
+        prices.update(get_current_spot_prices(connection))
+    for rule in rules:
+        instance_type = rule["instance_type"]
+        bid_price = rule["bid_price"]
+        performance_constant = rule["performance_constant"]
+        for region, region_prices in prices.iteritems():
+            for az, price in region_prices.get(instance_type, {}).iteritems():
+                if price > bid_price:
+                    log.debug("%s (in %s) too expensive for %s", price, az,
+                              instance_type)
+                else:
+                    choices.append(
+                        Spot(instance_type=instance_type, region=region,
+                             availability_zone=az, current_price=price,
+                             bid_price=bid_price,
+                             performance_constant=performance_constant))
+    # sort by self.value()
+    choices.sort()
+    return choices
 
-        for az, spot in spot_azs.iteritems():
-            if spot.price < r[1]:
-                s = Spot(spot, r[1], r[2])
-                choices.append(s)
-            else:
-                #print "%s(in %s) too expensive as of %s" % (spot, spot.availability_zone, spot.timestamp)
-                pass
-    return sorted(choices)
-
-def main():
-    regions = ['us-west-2',
-               'us-east-1',
-               'us-west-1',
-               'eu-west-1',
-               'ap-southeast-1',
-               'ap-southeast-2',
-               'ap-northeast-1',
-               'sa-east-1'
-    ]
-
-    if len(sys.argv) > 1:
-        print "Using cached data"
-        regions = map(get_pricelist_disk, regions)
-    else:
-        print "Querying AWS"
-        regions = map(download_pricelist, regions)
-        
-    ret = decide([
-        ["m3.large", 0.150, 0.4],
-        ["m1.xlarge", 0.150, 0.5],
-        ["m2.2xlarge", 0.250, 0.9],
-        ["c3.xlarge", 0.250, 1],
-        ["m3.xlarge", 0.250, 1.1],
-        ["c1.xlarge", 0.250, 1.2],
-        ["c3.2xlarge", 0.250, 1.3],
-        ["g2.2xlarge", 0.250, 1.3],
-        ["m3.2xlarge", 0.250, 1.3],
-        ["c3.2xlarge", 0.250, 1.3],
-        ["c3.xlarge", 0.300, "ondemand"]
-    ], regions)
-    print "\n".join(map(str, ret))
-    
 if __name__ == "__main__":
-    main()
+    logging.basicConfig(level=logging.DEBUG, format="%(message)s")
+    logging.getLogger("boto").setLevel(logging.INFO)
+    connections = []
+    for region in ['us-west-2', 'us-east-1']:
+        # FIXME: user secrets
+        connections.append(connect_to_region(region))
+    rules = [
+        {
+            "instance_type": "c3.xlarge",
+            "performance_constant": 1,
+            "bid_price": 0.25
+        },
+        {
+            "instance_type": "m3.xlarge",
+            "performance_constant": 1.1,
+            "bid_price": 0.25
+        },
+        {
+            "instance_type": "c3.2xlarge",
+            "performance_constant": 1.2,
+            "bid_price": 0.25
+        },
+    ]
+    ret = decide(connections, rules)
+    print "\n".join(map(str, ret))
