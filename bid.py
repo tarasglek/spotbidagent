@@ -36,16 +36,17 @@ class Spot:
     def __repr__(self):
         return "%s (%s, %s) %g (value: %g) < %g" % (
             self.instance_type, self.region, self.availability_zone,
-            self.current_price, self.value(), self.bid_price)
+            self.current_price, self.value, self.bid_price)
 
     def __str__(self):
         return self.__repr__()
 
+    @property
     def value(self):
         return self.current_price / self.performance_constant
 
     def __cmp__(self, other):
-        return cmp(self.value(), other.value())
+        return cmp(self.value, other.value)
 
 
 def decide(connections, rules):
@@ -68,7 +69,7 @@ def decide(connections, rules):
                              availability_zone=az, current_price=price,
                              bid_price=bid_price,
                              performance_constant=performance_constant))
-    # sort by self.value()
+    # sort by self.value
     choices.sort()
     return choices
 
