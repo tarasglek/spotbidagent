@@ -81,6 +81,11 @@ if __name__ == "__main__":
         connections.append(connect_to_region(region))
     rules = [
         {
+            "instance_type": "m3.large",
+            "performance_constant": 0.5,
+            "bid_price": 0.10
+        },
+        {
             "instance_type": "c3.xlarge",
             "performance_constant": 1,
             "bid_price": 0.25
@@ -91,8 +96,13 @@ if __name__ == "__main__":
             "bid_price": 0.25
         },
         {
+            "instance_type": "m3.2xlarge",
+            "performance_constant": 1.4,
+            "bid_price": 0.25
+        },
+        {
             "instance_type": "c3.2xlarge",
-            "performance_constant": 1.2,
+            "performance_constant": 1.5,
             "bid_price": 0.25
         },
     ]
