@@ -40,6 +40,9 @@ class Spot:
 
     def __str__(self):
         return self.__repr__()
+        
+    def __hash__(self):
+        return hash(self.__repr__())
 
     @property
     def value(self):
