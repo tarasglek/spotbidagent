@@ -86,11 +86,11 @@ class Spot:
         return cmp(self.value, other.value)
 
 
-def decide(connections, rules):
+def decide(connections, rules, product_description, start_time=None, instance_type=None):
     choices = []
     prices = {}
     for connection in connections:
-        prices.update(get_current_spot_prices(connection))
+        prices.update(get_current_spot_prices(connection, product_description, start_time, instance_type))
     for rule in rules:
         instance_type = rule["instance_type"]
         bid_price = rule["bid_price"]
