@@ -5,9 +5,14 @@ import logging
 log = logging.getLogger(__name__)
 
 
-def get_current_spot_prices(connection, product_description, start_time=None, instance_type=None):
+_spot_cache = {}
+
+
+def get_current_spot_prices(connection, product_description, start_time=None, instance_type=None, ignore_cache=False):
     """
-    Get the current spot prices for the region associated with the given connection.
+    Get the current spot prices for the region associated with the given
+    connection. This may return cached results. Pass ignore_cache=True to
+    bypass the cache
 
     Args:
         connection (boto.ec2.Connection): connection to a region
@@ -16,6 +21,7 @@ def get_current_spot_prices(connection, product_description, start_time=None, in
         start_time (iso8601 str): get spot prices starting from this time
         instance_type (str): restrict results to this instance type, e.g.
             "m1.medium"
+        ignore_cache (bool): ignore cached results
 
     Returns:
         A dict mapping region to a mapping of instance type to a mapping of
@@ -27,6 +33,11 @@ def get_current_spot_prices(connection, product_description, start_time=None, in
     next_token = None
     region = connection.region.name
     current_prices = {}
+    cache_key = (region, product_description, start_time, instance_type)
+    if not ignore_cache and cache_key in _spot_cache:
+        log.debug("returning cached results")
+        return _spot_cache[cache_key]
+
     if not start_time:
         # Default to 24 hours
         now = datetime.utcnow()
@@ -55,7 +66,10 @@ def get_current_spot_prices(connection, product_description, start_time=None, in
                 current_prices[inst_type][az] = price.price
         if not next_token:
             break
-    return {region: current_prices}
+
+    retval = {region: current_prices}
+    _spot_cache[cache_key] = retval
+    return retval
 
 
 class Spot:
