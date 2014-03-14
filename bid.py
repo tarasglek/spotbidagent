@@ -32,8 +32,9 @@ def get_current_spot_prices(connection, product_description, start_time=None, in
         now = datetime.utcnow()
         yesterday = now - timedelta(hours=24)
         start_time = yesterday.isoformat() + "Z"
+
     while True:
-        log.debug("getting spot prices from %s (next_token %s)", start_time, next_token)
+        log.debug("getting spot prices for instance_type %s from %s (next_token %s)", instance_type, start_time, next_token)
         all_prices = connection.get_spot_price_history(
             product_description=product_description,
             instance_type=instance_type,
@@ -47,11 +48,11 @@ def get_current_spot_prices(connection, product_description, start_time=None, in
         log.debug("got %i results", len(all_prices))
         for price in all_prices:
             az = price.availability_zone
-            instance_type = price.instance_type
-            if not current_prices.get(instance_type):
-                current_prices[instance_type] = {}
-            if not current_prices[instance_type].get(az):
-                current_prices[instance_type][az] = price.price
+            inst_type = price.instance_type
+            if not current_prices.get(inst_type):
+                current_prices[inst_type] = {}
+            if not current_prices[inst_type].get(az):
+                current_prices[inst_type][az] = price.price
         if not next_token:
             break
     return {region: current_prices}
