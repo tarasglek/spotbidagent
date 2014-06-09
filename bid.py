@@ -134,8 +134,8 @@ if __name__ == "__main__":
         connections.append(connect_to_region(region))
     rules = [
         {
-            "instance_type": "m3.large",
-            "performance_constant": 0.5,
+            "instance_type": "r3.xlarge",
+            "performance_constant": 1.2,
             "bid_price": 0.10
         },
         {
@@ -159,5 +159,5 @@ if __name__ == "__main__":
             "bid_price": 0.25
         },
     ]
-    ret = decide(connections, rules)
+    ret = decide(connections, rules, "Linux/UNIX (Amazon VPC)")
     print "\n".join(map(str, ret))
